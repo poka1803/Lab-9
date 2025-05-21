@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Учет расходов на комплектующие ПК</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ffebee; /* Светло-розовый фон */
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #d81b60; /* Розовый заголовок */
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #f8bbd0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        input[type="text"]:focus, input[type="number"]:focus {
+            border-color: #d81b60;
+            outline: none;
+        }
+        button {
+            background-color: #d81b60;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #ad1457;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 30px;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #f3e5f5;
+        }
+        th {
+            background-color: #fce4ec;
+            color: #c2185b;
+            font-weight: 600;
+        }
+        tr:hover {
+            background-color: #f8bbd0;
+        }
+        .total {
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 25px;
+            text-align: right;
+            color: #d81b60;
+            padding: 15px;
+            background-color: #fce4ec;
+            border-radius: 8px;
+        }
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.3s;
+            display: inline-block;
+        }
+        .delete-btn:hover {
+            background-color: #c62828;
+        }
+        .empty-message {
+            text-align: center;
+            padding: 30px;
+            color: #888;
+            font-size: 18px;
+            background-color: white;
+            border-radius: 8px;
+            margin-top: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Учет расходов на комплектующие ПК</h1>
+        
+        <form method="POST">
+            <div class="form-group">
+                <label for="device">Устройство:</label>
+                <input type="text" id="device" name="device" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="price">Стоимость (руб.):</label>
+                <input type="number" id="price" name="price" step="0.01" min="0" required>
+            </div>
+            
+            <button type="submit">Добавить</button>
+        </form>
+        
+        {% if parts %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Устройство</th>
+                    <th>Стоимость (руб.)</th>
+                    <th>Действие</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for part in parts %}
+                <tr>
+                    <td>{{ part.device }}</td>
+                    <td>{{ "%.2f"|format(part.price) }}</td>
+                    <td>
+                        <a href="{{ url_for('delete', id=part.id) }}" class="delete-btn">Удалить</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <div class="total">
+            Общая сумма: {{ "%.2f"|format(total) }} руб.
+        </div>
+        {% else %}
+        <div class="empty-message">
+            Нет добавленных комплектующих
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
